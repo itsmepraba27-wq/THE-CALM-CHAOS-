@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Boxed Dashboard & Groq AI Workspace</title>
+    <!-- Font Awesome Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --bg-main: #0d1117;
+            --box-bg: #161b22;
+            --box-border: #30363d;
+            --accent-cyan: #38bdf8;
+            --accent-blue: #2563eb;
+            --accent-purple: #8b5cf6;
+            --accent-green: #22c55e;
+            --accent-red: #ef4444;
+            --accent-amber: #f59e0b;
+            --text-main: #f0f6fc;
+            --text-sub: #8b949e;
+            --input-bg: #0d1117;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            min-height: 100vh;
+        }
+
+        .hidden { display: none !important; }
+
+        /* LOGIN BOX */
+        .login-wrapper {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+        }
+
+        .login-box {
+            background: var(--box-bg);
+            border: 2px solid var(--box-border);
+            border-radius: 12px;
+            padding: 2.5rem;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+        }
+
+        .login-box-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .login-box-header h2 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .login-box-header p {
+            color: var(--text-sub);
+            font-size: 0.88rem;
+        }
+
+        .field-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .field-group label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-sub);
+        }
+
+        .input-box {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-box i {
+            position: absolute;
+            left: 1rem;
+            color: var(--text-sub);
+        }
+
+        .input-box input {
+            width: 100%;
+            padding: 0.8rem 1rem 0.8rem 2.8rem;
+            background: var(--input-bg);
+            border: 1px solid var(--box-border);
+            border-radius: 8px;
+            color: var(--text-main);
+            font-size: 0.95rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .input-box input:focus {
+            border-color: var(--accent-cyan);
+        }
+
+        .btn-box-action {
+            width: 100%;
+            padding: 0.85rem;
+            background: var(--accent-cyan);
+            color: #0d1117;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .btn-box-action:hover {
+            opacity: 0.9;
+        }
+
+        /* HOME SCREEN */
+        #homePage {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .header-box {
+            background: var(--box-bg);
+            border-bottom: 2px solid var(--box-border);
+            padding: 1rem 2rem;
+        }
+
+        .header-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .brand-box {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .brand-icon-box {
+            width: 42px;
+            height: 42px;
+            background: var(--accent-amber);
+            color: #0d1117;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+        }
+
+        .user-box-controls {
+            display: flex;
+            align-items: center;
+            gap: 1.25rem;
+        }
+
+        .btn-logout-box {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--accent-red);
+            border: 1px solid var(--accent-red);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-logout-box:hover {
+            background: var(--accent-red);
+            color: white;
+        }
+
+        .grid-layout {
+            max-width: 1400px;
+            margin: 1.5rem auto;
+            padding: 0 1.5rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            width: 100%;
+            flex: 1;
+        }
+
+        @media (max-width: 900px) {
+            .grid-layout { grid-template-columns: 1fr; }
+        }
+
+        .left-box-column, .right-box-column {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .card-box {
+            background: var(--box-bg);
+            border: 2px solid var(--box-border);
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .card-box-header {
+            padding: 0.9rem 1.25rem;
+            border-bottom: 2px solid var(--box-border);
+            background: rgba(255, 255, 255, 0.02);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .card-box-title {
+            font-size: 0.95rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .chat-box-body {
+            height: 420px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-logs {
+            flex: 1;
+            padding: 1.25rem;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .chat-row {
+            display: flex;
+            gap: 0.8rem;
+            max-width: 85%;
+        }
+
+        .chat-row.user-row {
+            align-self: flex-end;
+            flex-direction: row-reverse;
+        }
+
+        .avatar-box {
+            width: 34px;
+            height: 34px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            flex-shrink: 0;
+            font-weight: 700;
+        }
+
+        .bot-avatar-box { background: var(--accent-amber); color: #0d1117; }
+        .user-avatar-box { background: var(--accent-purple); color: white; }
+
+        .chat-bubble-box {
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            border: 1px solid var(--box-border);
+            font-size: 0.88rem;
+            line-height: 1.5;
+            background: var(--input-bg);
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .chat-row.user-row .chat-bubble-box {
+            background: var(--accent-blue);
+            border-color: var(--accent-blue);
+            color: white;
+        }
+
+        .chat-input-box {
+            padding: 0.8rem 1rem;
+            border-top: 2px solid var(--box-border);
+            background: var(--input-bg);
+            display: flex;
+            gap: 0.8rem;
+        }
+
+        .chat-input-box input {
+            flex: 1;
+            background: var(--box-bg);
+            border: 1px solid var(--box-border);
+            border-radius: 6px;
+            padding: 0.7rem 1rem;
+            color: white;
+            font-size: 0.88rem;
+            outline: none;
+        }
+
+        .chat-input-box input:focus { border-color: var(--accent-cyan); }
+
+        .btn-send-box {
+            background: var(--accent-cyan);
+            color: #0d1117;
+            border: none;
+            border-radius: 6px;
+            width: 42px;
+            height: 42px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+
+        .typing-box {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+            padding: 4px;
+        }
+        .typing-box span {
+            width: 6px;
+            height: 6px;
+            background: var(--accent-cyan);
+            border-radius: 50%;
+            animation: bounce 1.2s infinite ease-in-out;
+        }
+        .typing-box span:nth-child(2) { animation-delay: 0.2s; }
+        .typing-box span:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes bounce { 0%, 80%, 100% { transform: translateY(0); } 40% { transform: translateY(-6px); } }
+
+        .detector-box-body {
+            padding: 1.25rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .detector-card-inner {
+            background: var(--input-bg);
+            border: 1px solid var(--box-border);
+            border-radius: 8px;
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .detector-icon-box {
+            width: 46px;
+            height: 46px;
+            border-radius: 8px;
+            background: rgba(56, 189, 248, 0.15);
+            color: var(--accent-cyan);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+        }
+
+        .detector-info-box h4 {
+            font-size: 1.05rem;
+            color: var(--accent-cyan);
+            margin-bottom: 0.2rem;
+        }
+
+        .detector-info-box p {
+            font-size: 0.82rem;
+            color: var(--text-sub);
+        }
+
+        .quote-box {
+            font-size: 0.85rem;
+            font-style: italic;
+            color: var(--text-main);
+            border-left: 3px solid var(--accent-purple);
+            background: var(--input-bg);
+            padding: 0.6rem 0.8rem;
+            border-radius: 4px;
+        }
+
+        .stats-grid-box {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            padding: 1.25rem;
+        }
+
+        .stat-card-box {
+            background: var(--input-bg);
+            border: 1px solid var(--box-border);
+            border-radius: 8px;
+            padding: 1.25rem;
+        }
+
+        .stat-card-box i {
+            font-size: 1.4rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--text-sub);
+        }
+
+        .actions-box-list {
+            padding: 1.25rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .action-item-box {
+            background: var(--input-bg);
+            border: 1px solid var(--box-border);
+            border-radius: 8px;
+            padding: 0.85rem 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            transition: border-color 0.2s;
+        }
+
+        .action-item-box:hover {
+            border-color: var(--accent-cyan);
+        }
+
+        .action-item-left {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            font-size: 0.88rem;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 1. LOGIN PAGE -->
+    <div id="loginPage" class="login-wrapper">
+        <div class="login-box">
+            <div class="login-box-header">
+                <h2>Groq AI Portal</h2>
+                <p>Type any username to enter the AI workspace</p>
+            </div>
+
+            <form onsubmit="handleLogin(event)">
+                <div class="field-group">
+                    <label for="userNameInput">Username</label>
+                    <div class="input-box">
+                        <i class="fa-solid fa-user"></i>
+                        <input type="text" id="userNameInput" placeholder="Enter your name..." required>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-box-action">
+                    Sign In <i class="fa-solid fa-arrow-right" style="margin-left: 0.4rem;"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- 2. HOME SCREEN -->
+    <div id="homePage" class="hidden">
+        
+        <header class="header-box">
+            <div class="header-container">
+                <div class="brand-box">
+                    <div class="brand-icon-box"><i class="fa-solid fa-bolt"></i></div>
+                    <div>
+                        <h1 style="font-size: 1.1rem; font-weight: 700;">SPARK AI Workspace</h1>
+                        <p style="font-size: 0.78rem; color: var(--text-sub);">Ultra-Fast LLM Engine & Language Inspector</p>
+                    </div>
+                </div>
+                <div class="user-box-controls">
+                    <div style="font-size: 0.9rem;">Logged in as: <strong id="displayName" style="color: var(--accent-cyan);">User</strong></div>
+                    <button onclick="handleLogout()" class="btn-logout-box">
+                        <i class="fa-solid fa-right-from-bracket"></i> Logout
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <main class="grid-layout">
+            
+            <div class="left-box-column">
+                
+                <!-- CHATBOT CARD -->
+                <div class="card-box">
+                    <div class="card-box-header">
+                        <span class="card-box-title">
+                            <i class="fa-solid fa-bolt" style="color: var(--accent-amber);"></i> Spark AI Assistant
+                        </span>
+                        <span style="font-size: 0.75rem; color: var(--accent-green);"><i class="fa-solid fa-circle"></i> Live API</span>
+                    </div>
+
+                    <div class="chat-box-body">
+                        <div class="chat-logs" id="chatLogs">
+                            <div class="chat-row">
+                                <div class="avatar-box bot-avatar-box"><i class="fa-solid fa-bolt"></i></div>
+                                <div class="chat-bubble-box">Hii welcome to our spark! Ask your queries ? in your language</div>
+                            </div>
+                        </div>
+
+                        <div class="chat-input-box">
+                            <input type="text" id="userInput" placeholder="Ask Spark AI anything..." onkeydown="if(event.key === 'Enter') processUserMessage()">
+                            <button class="btn-send-box" onclick="processUserMessage()"><i class="fa-solid fa-paper-plane"></i></button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- LANGUAGE DETECTOR CARD -->
+                <div class="card-box">
+                    <div class="card-box-header">
+                        <span class="card-box-title">
+                            <i class="fa-solid fa-language" style="color: var(--accent-purple);"></i> Language Detection Box
+                        </span>
+                        <span style="font-size: 0.75rem; color: var(--text-sub);">Real-time</span>
+                    </div>
+                    <div class="detector-box-body">
+                        <div class="detector-card-inner">
+                            <div class="detector-icon-box" id="langIcon">
+                                <i class="fa-solid fa-globe"></i>
+                            </div>
+                            <div class="detector-info-box">
+                                <h4 id="langTitle">English (Detected)</h4>
+                                <p id="langFamily">Code: EN • Family: Germanic (Indo-European)</p>
+                            </div>
+                        </div>
+                        <div style="font-size: 0.8rem; color: var(--text-sub);">Last Analyzed Output:</div>
+                        <div class="quote-box" id="langQuote">"spark Cloud API connected! Ask me any question..."</div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="right-box-column">
+                
+                <!-- METRICS CARD -->
+                <div class="card-box">
+                    <div class="card-box-header">
+                        <span class="card-box-title">
+                            <i class="fa-solid fa-chart-simple" style="color: var(--accent-green);"></i> Groq Performance
+                        </span>
+                    </div>
+                    <div class="stats-grid-box">
+                        <div class="stat-card-box">
+                            <i class="fa-solid fa-bolt-lightning" style="color: var(--accent-amber);"></i>
+                            <div class="stat-value" id="latencyStat">-- ms</div>
+                            <div class="stat-label">API Latency</div>
+                        </div>
+                        <div class="stat-card-box">
+                            <i class="fa-solid fa-message" style="color: var(--accent-cyan);"></i>
+                            <div class="stat-value" id="msgCounter">1</div>
+                            <div class="stat-label">Processed Messages</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PRESETS CARD -->
+                <div class="card-box">
+                    <div class="card-box-header">
+                        <span class="card-box-title">
+                            <i class="fa-solid fa-gears" style="color: var(--accent-amber);"></i> Quick Presets
+                        </span>
+                    </div>
+                    <div class="actions-box-list">
+                        <div class="action-item-box" onclick="clearLogs()">
+                            <div class="action-item-left">
+                                <i class="fa-solid fa-trash" style="color: var(--accent-red);"></i>
+                                <span>Reset Chat Box</span>
+                            </div>
+                            <i class="fa-solid fa-chevron-right" style="color: var(--text-sub); font-size: 0.8rem;"></i>
+                        </div>
+                        <div class="action-item-box" onclick="testPreset('Write a 3-line Python function to reverse a string')">
+                            <div class="action-item-left">
+                                <i class="fa-solid fa-code" style="color: var(--accent-cyan);"></i>
+                                <span>Ask Coding Question</span>
+                            </div>
+                            <i class="fa-solid fa-chevron-right" style="color: var(--text-sub); font-size: 0.8rem;"></i>
+                        </div>
+                        <div class="action-item-box" onclick="testPreset('Bonjour, comment vas-tu aujourdhui?')">
+                            <div class="action-item-left">
+                                <i class="fa-solid fa-flag" style="color: var(--accent-purple);"></i>
+                                <span>Test French Language</span>
+                            </div>
+                            <i class="fa-solid fa-chevron-right" style="color: var(--text-sub); font-size: 0.8rem;"></i>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- 3. SCRIPT LOGIC -->
+    <script>
+        // Enter your valid Groq API key here (https://console.groq.com/keys)
+        const GROQ_API_KEY = "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"; 
+        const GROQ_MODEL = "llama-3.3-70b-versatile";
+
+        let totalMsgs = 1;
+
+        // Maintains the dialogue history array for context-aware responses
+        let conversationHistory = [
+            {
+                role: "system",
+                content: "You are a highly intelligent, precise, and helpful AI assistant. Answer all user questions accurately, concisely, and directly in the user's preferred language."
+            }
+        ];
+
+        function handleLogin(e) {
+            e.preventDefault();
+            const name = document.getElementById('userNameInput').value.trim();
+            document.getElementById('displayName').innerText = name || 'User';
+
+            document.getElementById('loginPage').classList.add('hidden');
+            document.getElementById('homePage').classList.remove('hidden');
+        }
+
+        function handleLogout() {
+            document.getElementById('userNameInput').value = '';
+            document.getElementById('homePage').classList.add('hidden');
+            document.getElementById('loginPage').classList.remove('hidden');
+        }
+
+        function detectLanguage(text) {
+            const t = text.trim();
+            if (/[\u0B80-\u0BFF]/.test(t)) return { name: "Tamil", code: "TA", family: "Dravidian", icon: "fa-om" };
+            if (/[\u0900-\u097F]/.test(t)) return { name: "Hindi", code: "HI", family: "Indo-Aryan", icon: "fa-landmark" };
+            if (/\b(bonjour|merci|oui|salut|comment)\b/i.test(t)) return { name: "French", code: "FR", family: "Romance (Indo-European)", icon: "fa-wine-glass" };
+            if (/\b(hola|gracias|buenos|dias)\b/i.test(t)) return { name: "Spanish", code: "ES", family: "Romance (Indo-European)", icon: "fa-guitar" };
+            if (/\b(hallo|danke|guten|morgen)\b/i.test(t)) return { name: "German", code: "DE", family: "Germanic (Indo-European)", icon: "fa-beer-mug-empty" };
+            
+            return { name: "English", code: "EN", family: "Germanic (Indo-European)", icon: "fa-globe" };
+        }
+
+        async function processUserMessage() {
+            const input = document.getElementById('userInput');
+            const val = input.value.trim();
+            if (!val) return;
+
+            // 1. Add User Msg to UI & History
+            appendMsg(val, true);
+            conversationHistory.push({ role: "user", content: val });
+            input.value = '';
+
+            // 2. Increment Counter
+            totalMsgs++;
+            document.getElementById('msgCounter').innerText = totalMsgs;
+
+            // 3. Update Language Detector
+            const lang = detectLanguage(val);
+            document.getElementById('langTitle').innerText = `${lang.name} (Detected)`;
+            document.getElementById('langFamily').innerText = `Code: ${lang.code} • Family: ${lang.family}`;
+            document.getElementById('langQuote').innerText = `"${val}"`;
+            document.getElementById('langIcon').innerHTML = `<i class="fa-solid ${lang.icon}"></i>`;
+
+            // 4. Show Typing Indicator
+            const loaderId = showTypingIndicator();
+
+            // 5. Fetch AI Response from Groq API
+            const startTime = performance.now();
+            const aiReply = await fetchGroqReply();
+            const endTime = performance.now();
+
+            // Update Latency Metric
+            const latency = Math.round(endTime - startTime);
+            document.getElementById('latencyStat').innerText = `${latency} ms`;
+
+            // Remove Loader & Render Output
+            removeTypingIndicator(loaderId);
+            appendMsg(aiReply, false);
+            conversationHistory.push({ role: "assistant", content: aiReply });
+        }
+
+        async function fetchGroqReply() {
+            if (GROQ_API_KEY === "https://www.google.com/search?q=groq+ai&rlz=1C1YTUH_enIN1088IN1088&oq=groq&gs_lcrp=EgZjaHJvbWUqCAgAEEUYJxg7MggIABBFGCcYOzITCAEQLhiDARjHARixAxjRAxiABDINCAIQABiDARixAxiABDIPCAMQABhDGLEDGIAEGIoFMgcIBBAAGIAEMgoIBRAAGLEDGIAEMg0IBhAAGIMBGLEDGIAEMgoIBxAAGLEDGIAE0gEJNTQ5NmowajE1qAIIsAIB8QW5_JjDnRk4NvEFufyYw50ZODY&sourceid=chrome&source=chrome.rb&ie=UTF-8" || !GROQ_API_KEY) {
+                return "⚠️ [Groq API Key Required]\nPlease open this code file in a code editor and replace 'YOUR_GROQ_API_KEY_HERE' with your actual key from https://console.groq.com/keys.";
+            }
+
+            try {
+                const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+                    method: "POST",
+                    headers: {
+                        "Authorization": `Bearer ${GROQ_API_KEY}`,
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        model: GROQ_MODEL,
+                        messages: conversationHistory,
+                        temperature: 0.7,
+                        max_tokens: 1000
+                    })
+                });
+
+                if (!response.ok) {
+                    const errData = await response.json();
+                    return `Groq API Error (${response.status}): ${errData.error?.message || response.statusText}`;
+                }
+
+                const data = await response.json();
+                return data.choices[0]?.message?.content || "No response received from Groq.";
+            } catch (err) {
+                return `Network Error: Unable to reach Groq API. (${err.message})`;
+            }
+        }
+
+        function appendMsg(text, isUser) {
+            const logs = document.getElementById('chatLogs');
+            const rowClass = isUser ? 'chat-row user-row' : 'chat-row';
+            const avatarClass = isUser ? 'avatar-box user-avatar-box' : 'avatar-box bot-avatar-box';
+            const icon = isUser ? 'fa-user' : 'fa-bolt';
+
+            const html = `
+                <div class="${rowClass}">
+                    <div class="${avatarClass}"><i class="fa-solid ${icon}"></i></div>
+                    <div class="chat-bubble-box">${escapeHtml(text)}</div>
+                </div>
+            `;
+            logs.insertAdjacentHTML('beforeend', html);
+            logs.scrollTop = logs.scrollHeight;
+        }
+
+        function showTypingIndicator() {
+            const id = 'loader-' + Date.now();
+            const logs = document.getElementById('chatLogs');
+            const html = `
+                <div class="chat-row" id="${id}">
+                    <div class="avatar-box bot-avatar-box"><i class="fa-solid fa-bolt"></i></div>
+                    <div class="chat-bubble-box">
+                        <div class="typing-box">
+                            <span></span><span></span><span></span>
+                        </div>
+                    </div>
+                </div>`;
+            logs.insertAdjacentHTML('beforeend', html);
+            logs.scrollTop = logs.scrollHeight;
+            return id;
+        }
+
+        function removeTypingIndicator(id) {
+            const el = document.getElementById(id);
+            if (el) el.remove();
+        }
+
+        function testPreset(txt) {
+            document.getElementById('userInput').value = txt;
+            processUserMessage();
+        }
+
+        function clearLogs() {
+            conversationHistory = [
+                {
+                    role: "system",
+                    content: "You are a highly intelligent, precise, and helpful AI assistant. Answer all user questions accurately, concisely, and directly in the user's preferred language."
+                }
+            ];
+            document.getElementById('chatLogs').innerHTML = `
+                <div class="chat-row">
+                    <div class="avatar-box bot-avatar-box"><i class="fa-solid fa-bolt"></i></div>
+                    <div class="chat-bubble-box">Chat logs reset! Ask Groq AI anything.</div>
+                </div>`;
+        }
+
+        function escapeHtml(str) {
+            return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        }
+    </script>
+</body>
+</html>
